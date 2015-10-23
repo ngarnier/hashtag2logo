@@ -1,0 +1,20 @@
+{
+  "name": "hashtag2logo",
+  "version": "1.0.0",
+  "description": "Backend: Turn all the active twitter users on a hashtag in the logo of your choice.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngarnier/hashtag2logo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ngarnier/hashtag2logo/issues"
+  },
+  "homepage": "https://github.com/ngarnier/hashtag2logo#readme"
+}
