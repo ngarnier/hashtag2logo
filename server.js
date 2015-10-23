@@ -1,8 +1,8 @@
 // This is server
 
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
+var express = require('express'),
+	bodyParser = require('body-parser'),
+	app = express();
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -27,21 +27,28 @@ function handleAttachment(att){
 }
 
 function handleHashtag(hash){
+	//Look for the hashtag on twitter
 
+	// Get all users who tweeted on the #
+
+	// Get all the pictures of all the users and put them in a single photo
+
+	//Turn that photo into the logo (merge with handleAttachment)
 }
 
 function sendEmail(address){
+	//Send the image to that address
 
 }
 
-function save(finalImage, date, adress, hash, picFrame){
-
+function save(finalImage, date, address, hash, picFrame){
+	//Store in the db the final image with the date when it was created, the address of the requester, the hashtag and the original frame of all users
 }
 
 
 var server = app.listen(3000, function () {
-  var host = server.address().address;
-  var port = server.address().port;
+  var host = server.address().address,
+  	  port = server.address().port;
 
   console.log('Example app listening at http://%s:%s', host, port);
 });
