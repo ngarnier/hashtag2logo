@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/ngarnier/hashtag2logo/issues"
   },
-  "homepage": "https://github.com/ngarnier/hashtag2logo#readme"
+  "homepage": "https://github.com/ngarnier/hashtag2logo#readme",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
 }
