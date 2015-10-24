@@ -10,6 +10,9 @@ var express = require('express'),
 	fs = require('fs'),
 	gm = require('gm'),
 	gmstate,
+	gmstateRow,
+	n,
+	m,
 	imagesArray = [];
 
 app.use(bodyParser.json()); // support json encoded bodies
@@ -36,100 +39,65 @@ function handleAttachment(att){
 
 function handleHashtag(hash){
 	//Look for the hashtag on twitter
-	T.get('search/tweets', { q: 'aghacks', count: 16 }, function(err, data, response) {
-		for (var i = 0; i < data.statuses.length; i++) {
-				imagesArray.push(data.statuses[i].user.profile_image_url);
-		};
-  		if (err) {
+	T.get('search/tweets', { q: hash, count: 100 }, function(err, data, response) {
+		//Store all the pics of all users who tweeted in imagesArray
+		if (err) {
   			console.log(err);
+  			return;
   		}
-  			// Get all the pictures of all the users and put them in a single photo
+		for (var i = 0; i < data.statuses.length; i++) {
+			imagesArray.push(data.statuses[i].user.profile_image_url);
+		};
 
-console.log("ok");
+		m = Math.floor(Math.sqrt(imagesArray.length));
+		//n = m/4;
 
-gmstate = gm(imagesArray[0]);
-for (var i = 1; i < 4; i++) {
-	gmstate.append(imagesArray[i], true);
-}
+		var mosaic = function() {
+			gmstateRow = gm("0.png");
 
-// finally write out the file asynchronously
-gmstate.write('1.png', function (err) {
-  if (!err) console.log('Hooray!');
-});
+			for (var i = 1; i < m; i++) {
+				gmstateRow.append(i+".png");
+				console.log("appending" + i+".png");
+			}
 
-gmstate = gm(imagesArray[4]);
-for (var i = 5; i < 8; i++) {
-	gmstate.append(imagesArray[i], true);
-}
+			// finally write out the file asynchronously
+			gmstateRow.write('picFrame.png', function (err) {
+				if (err) {
+					console.log(err);
+				}
+				else if (!err) {
+					console.log('Hooray picFrame!');
+					server.close();
+				}
+			});	
+		}
 
-// finally write out the file asynchronously
-gmstate.write('2.png', function (err) {
-  if (!err) console.log('Hooray!');
-});
+		for (var k = 0; k < m; k++) {
 
-gmstate = gm(imagesArray[8]);
-for (var i = 9; i < 12; i++) {
-	gmstate.append(imagesArray[i], true);
-}
+			gmstate = gm(imagesArray[0+k*m]);
 
-// finally write out the file asynchronously
-gmstate.write('3.png', function (err) {
-  if (!err) console.log('Hooray!');
-});
+			for (var i = 1+k*m; i < m+k*m; i++) {
+				gmstate.append(imagesArray[i], true);
+			}
+			// finally write out the file asynchronously
 
-gmstate = gm(imagesArray[12]);
-for (var i = 13; i < 16; i++) {
-	gmstate.append(imagesArray[i], true);
-}
+			gmstate.write(k +'.png', function (err) {
+				// cereqte a counter
+				console.log("writing " + k + " image");
 
-// finally write out the file asynchronously
-gmstate.write('4.png', function (err) {
-  if (!err) console.log('Hooray!');
-});
+				if (err) {
+					console.log(err);
+				}
+				else
+					mosaic();
+			});
 
-gmstate = gm("1.png");
-for (var i = 2; i <= 4; i++) {
-	gmstate.append(i + ".png");
-}
-
-// finally write out the file asynchronously
-gmstate.write('output.png', function (err) {
-  if (!err) console.log('Hooray!');
-  server.close();
-});
-
-	// a b c d  ->  ab
-//              cd
-/*gm()
-    .in('-page', '+0+0')  // Custom place for each of the images
-    .in(imagesArray[0])
-    .in('-page', '+0+48')
-    .in(imagesArray[1])
-    .in('-page', '+0+96')
-    .in(imagesArray[1])
-    .in('-page', '+48+0')
-    .in(imagesArray[2])
-    .in('-page', '+48+48')
-    .in(imagesArray[2])
-    .in('-page', '+48+96')
-    .in(imagesArray[2])
-    .in('-page', '+96+0')
-    .in(imagesArray[2])
-    .in('-page', '+96+48')
-    .in(imagesArray[3])
-    .in('-page', '+96+96')
-    .in(imagesArray[3])
-    .mosaic()  // Merges the images as a matrix
-    .write('output.jpg', function (err) {
-        if (err) console.log(err);
-    });*/
-  		console.log(imagesArray);
+		}	
 	});
-	// Get all users who tweeted on the #
 
 	//Turn that photo into the logo (merge with handleAttachment)
 }
-handleHashtag("hash");
+handleHashtag("aghacks");
 
 function sendEmail(address){
 	//Send the image to that address
