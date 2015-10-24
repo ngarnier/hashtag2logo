@@ -1,7 +1,7 @@
 # Logs
 logs
 *.log
-password
+credentials.js
 
 # Runtime data
 pids

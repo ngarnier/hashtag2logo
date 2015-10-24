@@ -9,9 +9,8 @@ var express = require('express'),
 	T = new Twit(credentials.twitter),
 	fs = require('fs'),
 	gm = require('gm'),
-	imagesArray = [],
-	counter = 0, 
-	horizontal = true;
+	gmstate,
+	imagesArray = [];
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -45,29 +44,62 @@ function handleHashtag(hash){
   			console.log(err);
   		}
   			// Get all the pictures of all the users and put them in a single photo
-	// a b c d  ->  ab
-//              cd
+
 console.log("ok");
 
-var gm = require('gm');
-
-var gmstate = gm(imagesArray[0]);
-for (var i = 1; i < imagesArray.length; i++) {
-	if (counter == 4) {
-		horizontal = false;
-		counter = 0;
-	}
-	gmstate.append(imagesArray[i],horizontal);
-	counter++
+gmstate = gm(imagesArray[0]);
+for (var i = 1; i < 4; i++) {
+	gmstate.append(imagesArray[i], true);
 }
 
 // finally write out the file asynchronously
-gmstate.write('result.png', function (err) {
+gmstate.write('1.png', function (err) {
+  if (!err) console.log('Hooray!');
+});
+
+gmstate = gm(imagesArray[4]);
+for (var i = 5; i < 8; i++) {
+	gmstate.append(imagesArray[i], true);
+}
+
+// finally write out the file asynchronously
+gmstate.write('2.png', function (err) {
+  if (!err) console.log('Hooray!');
+});
+
+gmstate = gm(imagesArray[8]);
+for (var i = 9; i < 12; i++) {
+	gmstate.append(imagesArray[i], true);
+}
+
+// finally write out the file asynchronously
+gmstate.write('3.png', function (err) {
+  if (!err) console.log('Hooray!');
+});
+
+gmstate = gm(imagesArray[12]);
+for (var i = 13; i < 16; i++) {
+	gmstate.append(imagesArray[i], true);
+}
+
+// finally write out the file asynchronously
+gmstate.write('4.png', function (err) {
+  if (!err) console.log('Hooray!');
+});
+
+gmstate = gm("1.png");
+for (var i = 2; i <= 4; i++) {
+	gmstate.append(i + ".png");
+}
+
+// finally write out the file asynchronously
+gmstate.write('output.png', function (err) {
   if (!err) console.log('Hooray!');
   server.close();
 });
 
-
+	// a b c d  ->  ab
+//              cd
 /*gm()
     .in('-page', '+0+0')  // Custom place for each of the images
     .in(imagesArray[0])
@@ -97,7 +129,7 @@ gmstate.write('result.png', function (err) {
 
 	//Turn that photo into the logo (merge with handleAttachment)
 }
-//handleHashtag("hash");
+handleHashtag("hash");
 
 function sendEmail(address){
 	//Send the image to that address
