@@ -6,14 +6,10 @@ var express = require('express'),
 	credentials = require('./credentials.js'),
 	reverterMerger = require('./reverterMerger.js'),
 	imageSizer = require('./imageSizer.js'),
+	mosaic = require('./mosaic.js'),
 	Twit = require('twit'),
 	T = new Twit(credentials.twitter),
 	fs = require('fs'),
-	gm = require('gm'),
-	gmstate,
-	gmstateRow,
-	n,
-	m,
 	imagesArray = [];
 
 app.use(bodyParser.json()); // support json encoded bodies
@@ -38,23 +34,27 @@ app.post('/parse/', function (req, res) {
 
 	console.log("--> Mail recived from " + sender + "whith the hashtag #" + hashtag);
 
-	require("fs").writeFile("attachment/" + new_attachement_name, attachmentb64, 'base64', function(err) {
-		if (err){
-			console.log(err);
-		}
-		else{
-			handleAttachment(new_attachement_name);
-		}
+	handleHashtag(hashtag, function(){
+		require("fs").writeFile("attachment/" + new_attachement_name, attachmentb64, 'base64', function(err) {
+			if (err){
+				console.log(err);
+			}
+			else{
+				handleAttachment(new_attachement_name);
+			}
 
+		});
 	});
+
+	
 });
 
 // This function handle the attachment
 function handleAttachment(att){
 	//I am handling the attachment which is in PNG
 
-	imageSizer.syncImageSizes("attachment/" + att, 'output.png', 'resized/'+att, function(){
-		reverterMerger.revertAndMerge('resized/'+att, 'output.png', 'output/'+att);
+	imageSizer.syncImageSizes("attachment/" + att, 'picFrame.png', 'resized/'+att, function(){
+		reverterMerger.revertAndMerge('resized/'+att, 'picFrame.png', 'output/'+att);
 	});
 
 	// I need to resize the photo in order to cut unused space
@@ -62,7 +62,9 @@ function handleAttachment(att){
 	// Revert the transparent with white color and the non-transparent in transparent
 }
 
-function handleHashtag(hash){
+
+
+function handleHashtag(hash, callback){
 	//Look for the hashtag on twitter
 	T.get('search/tweets', { q: hash, count: 100 }, function(err, data, response) {
 		//Store all the pics of all users who tweeted in imagesArray
@@ -70,59 +72,14 @@ function handleHashtag(hash){
   			console.log(err);
   			return;
   		}
+  		console.log(data.statuses.length);
 		for (var i = 0; i < data.statuses.length; i++) {
 			imagesArray.push(data.statuses[i].user.profile_image_url);
 		};
 
-		m = Math.floor(Math.sqrt(imagesArray.length));
-		//n = m/4;
-
-		var mosaic = function() {
-			gmstateRow = gm("0.png");
-
-			for (var i = 1; i < m; i++) {
-				gmstateRow.append(i+".png");
-				console.log("appending" + i+".png");
-			}
-
-			// finally write out the file asynchronously
-			gmstateRow.write('picFrame.png', function (err) {
-				if (err) {
-					console.log(err);
-				}
-				else if (!err) {
-					console.log('Hooray picFrame!');
-					server.close();
-				}
-			});	
-		}
-
-		for (var k = 0; k < m; k++) {
-
-			gmstate = gm(imagesArray[0+k*m]);
-
-			for (var i = 1+k*m; i < m+k*m; i++) {
-				gmstate.append(imagesArray[i], true);
-			}
-			// finally write out the file asynchronously
-
-			gmstate.write(k +'.png', function (err) {
-				// cereqte a counter
-				console.log("writing " + k + " image");
-
-				if (err) {
-					console.log(err);
-				}
-				else
-					mosaic();
-			});
-
-		}	
+		mosaic.createMosaic(imagesArray, callback);
 	});
-
-	//Turn that photo into the logo (merge with handleAttachment)
 }
-handleHashtag("aghacks");
 
 function sendEmail(address){
 	//Send the image to that address
