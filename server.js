@@ -72,12 +72,33 @@ function handleHashtag(hash, callback){
   			console.log(err);
   			return;
   		}
-  		console.log(data.statuses.length);
-		for (var i = 0; i < data.statuses.length; i++) {
-			imagesArray.push(data.statuses[i].user.profile_image_url);
-		};
 
-		mosaic.createMosaic(imagesArray, callback);
+		T.get('search/tweets', { cursor:data.next_cursor, q: hash, count: 100 }, function(err, data2, response) {
+			//Store all the pics of all users who tweeted in imagesArray
+			if (err) {
+	  			console.log(err);
+	  			return;
+	  		}
+
+			T.get('search/tweets', { cursor:data2.next_cursor, q: hash, count: 100 }, function(err, data3, response) {
+				//Store all the pics of all users who tweeted in imagesArray
+				if (err) {
+		  			console.log(err);
+		  			return;
+		  		}
+				for (var i = 0; i < data.statuses.length; i++) {
+					imagesArray.push(data.statuses[i].user.profile_image_url);
+				};
+				for (var i = 0; i < data2.statuses.length; i++) {
+					imagesArray.push(data2.statuses[i].user.profile_image_url);
+				};
+				for (var i = 0; i < data3.statuses.length; i++) {
+					imagesArray.push(data3.statuses[i].user.profile_image_url);
+				};
+				console.log(imagesArray.length);
+				mosaic.createMosaic(imagesArray, callback);
+			});
+		});
 	});
 }
 
