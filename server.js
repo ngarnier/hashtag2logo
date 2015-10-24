@@ -9,7 +9,9 @@ var express = require('express'),
 	T = new Twit(credentials.twitter),
 	fs = require('fs'),
 	gm = require('gm'),
-	imagesArray = [];
+	imagesArray = [],
+	counter = 0, 
+	horizontal = true;
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -35,14 +37,9 @@ function handleAttachment(att){
 
 function handleHashtag(hash){
 	//Look for the hashtag on twitter
-	T.get('search/tweets', { q: 'aghacks', count: 4 }, function(err, data, response) {
+	T.get('search/tweets', { q: 'aghacks', count: 16 }, function(err, data, response) {
 		for (var i = 0; i < data.statuses.length; i++) {
-			if (i == 0) {
 				imagesArray.push(data.statuses[i].user.profile_image_url);
-			}
-			else if (data.statuses[i].user.profile_image_url !== data.statuses[i-1].user.profile_image_url) {
-				imagesArray.push(data.statuses[i].user.profile_image_url);
-			}
 		};
   		if (err) {
   			console.log(err);
@@ -51,20 +48,49 @@ function handleHashtag(hash){
 	// a b c d  ->  ab
 //              cd
 console.log("ok");
-gm()
+
+var gm = require('gm');
+
+var gmstate = gm(imagesArray[0]);
+for (var i = 1; i < imagesArray.length; i++) {
+	if (counter == 4) {
+		horizontal = false;
+		counter = 0;
+	}
+	gmstate.append(imagesArray[i],horizontal);
+	counter++
+}
+
+// finally write out the file asynchronously
+gmstate.write('result.png', function (err) {
+  if (!err) console.log('Hooray!');
+  server.close();
+});
+
+
+/*gm()
     .in('-page', '+0+0')  // Custom place for each of the images
     .in(imagesArray[0])
-    .in('-page', '+48+0')
-    .in(imagesArray[1])
     .in('-page', '+0+48')
+    .in(imagesArray[1])
+    .in('-page', '+0+96')
+    .in(imagesArray[1])
+    .in('-page', '+48+0')
     .in(imagesArray[2])
     .in('-page', '+48+48')
+    .in(imagesArray[2])
+    .in('-page', '+48+96')
+    .in(imagesArray[2])
+    .in('-page', '+96+0')
+    .in(imagesArray[2])
+    .in('-page', '+96+48')
     .in(imagesArray[3])
-    .minify()  // Halves the size, 512x512 -> 256x256
+    .in('-page', '+96+96')
+    .in(imagesArray[3])
     .mosaic()  // Merges the images as a matrix
     .write('output.jpg', function (err) {
         if (err) console.log(err);
-    });
+    });*/
   		console.log(imagesArray);
 	});
 	// Get all users who tweeted on the #
