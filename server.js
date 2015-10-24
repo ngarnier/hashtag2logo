@@ -2,7 +2,10 @@
 
 var express = require('express'),
 	bodyParser = require('body-parser'),
-	app = express();
+	app = express(),
+	credentials = require('./credentials.js'),
+	Twit = require('twit'),
+	T = new Twit(credentials.twitter);
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -12,10 +15,10 @@ app.get('/', function (req, res) {
 });
 
 // this is where the Parse API should make a post reques
-app.post('/parse/', function (req, res) {
+/*app.post('/parse/', function (req, res) {
 	res.send(req.body);
 	console.log(req.body);
-});
+});*/
 
 // This function handle the attachment
 function handleAttachment(att){
@@ -28,13 +31,26 @@ function handleAttachment(att){
 
 function handleHashtag(hash){
 	//Look for the hashtag on twitter
-
+	T.get('search/tweets', { q: 'aghacks', count: 20 }, function(err, data, response) {
+		for (var i = 0; i < data.statuses.length; i++) {
+			if (i == 0) {
+				console.log(data.statuses[i].user.profile_image_url);
+			}
+			else if (data.statuses[i].user.profile_image_url !== data.statuses[i-1].user.profile_image_url) {
+				console.log("---------" + data.statuses[i].user.profile_image_url);
+			}
+		};
+  		if (err) {
+  			console.log(err);
+  		}
+	})
 	// Get all users who tweeted on the #
 
 	// Get all the pictures of all the users and put them in a single photo
 
 	//Turn that photo into the logo (merge with handleAttachment)
 }
+handleHashtag("hash");
 
 function sendEmail(address){
 	//Send the image to that address
