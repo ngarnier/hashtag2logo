@@ -105,7 +105,14 @@ function sendEmail(address){
 }
 
 mergePhoto('images/ps.png', 'images/google.png');
-function mergePhoto(logo, picFrame){
+
+function syncImageSizes(logo, picFrame){
+	
+
+}
+
+// this function will revert And Merge the Photos 
+function revertAndMergePhotos(logo, picFrame){
 	reverterMerger.revertAndMerge(logo, picFrame, "images/output_final.png");
 }
 
