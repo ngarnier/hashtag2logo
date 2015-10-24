@@ -1,6 +1,7 @@
 var fs = require('fs'),
     PNG = require('pngjs').PNG;
 
+// this function will revert And Merge the Photos 
 exports.revertAndMerge = function(toRevert, toMerge, resultName) {
       
     var base = fs.createReadStream(toRevert)

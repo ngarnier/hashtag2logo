@@ -5,6 +5,7 @@ var express = require('express'),
 	app = express(),
 	credentials = require('./credentials.js'),
 	reverterMerger = require('./reverterMerger.js'),
+	imageSizer = require('./imageSizer.js'),
 	Twit = require('twit'),
 	T = new Twit(credentials.twitter),
 	fs = require('fs'),
@@ -129,35 +130,17 @@ gmstate.write('output.png', function (err) {
 
 	//Turn that photo into the logo (merge with handleAttachment)
 }
-handleHashtag("hash");
+//handleHashtag("hash");
 
 function sendEmail(address){
 	//Send the image to that address
 
 }
 
-// this function will take the two photos and try to get the best size possible for them
-function syncImageSizes(logo, picFrame, outputName){
-	gm(picFrame)
-	.size(function (err, sizePicFrame) {
-		if (!err){
-			gm(logo)	
-			.resizeExact(sizePicFrame.width, sizePicFrame.width)
-			.write(outputName, function (err) {
-  				if (!err) console.log('done');
-  			});
-		}
-		else
-			console.log('error while calling size on picFrame in function syncImageSizes');
-	});
-}
+//imageSizer.syncImageSizes('images/ps.png', 'output.png', 'resized.png');
+//reverterMerger.revertAndMerge('resized.png', 'output.png', 'superoutput.png')
 
-// this function will revert And Merge the Photos 
-function revertAndMergePhotos(logo, picFrame, outputName){
-	reverterMerger.revertAndMerge(logo, picFrame, outputName);
-}
-
-function save(finalImage, date, address, hash, picFrame){
+function saveInDb(finalImage, date, address, hash, picFrame){
 	//Store in the db the final image with the date when it was created, the address of the requester, the hashtag and the original frame of all users
 }
 
