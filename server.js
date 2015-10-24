@@ -105,13 +105,24 @@ function sendEmail(address){
 }
 
 // this function will take the two photos and try to get the best size possible for them
-function syncImageSizes(logo, picFrame){
-	
+function syncImageSizes(logo, picFrame, outputName){
+	gm(picFrame)
+	.size(function (err, sizePicFrame) {
+		if (!err){
+			gm(logo)	
+			.resizeExact(sizePicFrame.width, sizePicFrame.width)
+			.write(outputName, function (err) {
+  				if (!err) console.log('done');
+  			});
+		}
+		else
+			console.log('error while calling size on picFrame in function syncImageSizes');
+	});
 }
 
 // this function will revert And Merge the Photos 
-function revertAndMergePhotos(logo, picFrame){
-	reverterMerger.revertAndMerge(logo, picFrame, "images/output_final.png");
+function revertAndMergePhotos(logo, picFrame, outputName){
+	reverterMerger.revertAndMerge(logo, picFrame, outputName);
 }
 
 function save(finalImage, date, address, hash, picFrame){
