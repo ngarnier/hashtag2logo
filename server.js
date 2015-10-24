@@ -4,6 +4,7 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	app = express(),
 	credentials = require('./credentials.js'),
+	reverterMerger = require('./reverterMerger.js'),
 	Twit = require('twit'),
 	T = new Twit(credentials.twitter),
 	fs = require('fs'),
@@ -70,11 +71,16 @@ gm()
 
 	//Turn that photo into the logo (merge with handleAttachment)
 }
-handleHashtag("hash");
+//handleHashtag("hash");
 
 function sendEmail(address){
 	//Send the image to that address
 
+}
+
+mergePhoto('images/ps.png', 'images/google.png');
+function mergePhoto(logo, picFrame){
+	reverterMerger.revertAndMerge(logo, picFrame, "images/output_final.png");
 }
 
 function save(finalImage, date, address, hash, picFrame){
