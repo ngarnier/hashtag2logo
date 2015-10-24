@@ -20,5 +20,6 @@
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3"
+    "pngjs": "^2.0.0"
   }
 }
