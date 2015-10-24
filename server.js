@@ -1,10 +1,11 @@
-// This is server
+// This is the server
 
 var express = require('express'),
 	bodyParser = require('body-parser'),
 	app = express(),
 	credentials = require('./credentials.js'),
 	reverterMerger = require('./reverterMerger.js'),
+	imageSizer = require('./imageSizer.js'),
 	Twit = require('twit'),
 	T = new Twit(credentials.twitter),
 	fs = require('fs'),
@@ -23,14 +24,38 @@ app.get('/', function (req, res) {
 });
 
 // this is where the Parse API should make a post reques
-/*app.post('/parse/', function (req, res) {
-	res.send(req.body);
-	console.log(req.body);
-});*/
+app.post('/parse/', function (req, res) {
+	res.send("ok");
+
+	var hashtag = req.body.Subject,
+		sender = req.body.Sender,
+		attachmentb64 = req.body.Attachment1;
+
+	// to handle the case without atachment
+
+	var timestamp = Math.floor(new Date() / 1000),
+	new_attachement_name = hashtag + "_" + timestamp + ".png";
+
+	console.log("--> Mail recived from " + sender + "whith the hashtag #" + hashtag);
+
+	require("fs").writeFile("attachment/" + new_attachement_name, attachmentb64, 'base64', function(err) {
+		if (err){
+			console.log(err);
+		}
+		else{
+			handleAttachment(new_attachement_name);
+		}
+
+	});
+});
 
 // This function handle the attachment
 function handleAttachment(att){
 	//I am handling the attachment which is in PNG
+
+	imageSizer.syncImageSizes("attachment/" + att, 'output.png', 'resized/'+att, function(){
+		reverterMerger.revertAndMerge('resized/'+att, 'output.png', 'output/'+att);
+	});
 
 	// I need to resize the photo in order to cut unused space
 
@@ -104,28 +129,8 @@ function sendEmail(address){
 
 }
 
-// this function will take the two photos and try to get the best size possible for them
-function syncImageSizes(logo, picFrame, outputName){
-	gm(picFrame)
-	.size(function (err, sizePicFrame) {
-		if (!err){
-			gm(logo)	
-			.resizeExact(sizePicFrame.width, sizePicFrame.width)
-			.write(outputName, function (err) {
-  				if (!err) console.log('done');
-  			});
-		}
-		else
-			console.log('error while calling size on picFrame in function syncImageSizes');
-	});
-}
 
-// this function will revert And Merge the Photos 
-function revertAndMergePhotos(logo, picFrame, outputName){
-	reverterMerger.revertAndMerge(logo, picFrame, outputName);
-}
-
-function save(finalImage, date, address, hash, picFrame){
+function saveInDb(finalImage, date, address, hash, picFrame){
 	//Store in the db the final image with the date when it was created, the address of the requester, the hashtag and the original frame of all users
 }
 
