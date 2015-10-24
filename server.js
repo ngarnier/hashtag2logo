@@ -104,11 +104,9 @@ function sendEmail(address){
 
 }
 
-mergePhoto('images/ps.png', 'images/google.png');
-
+// this function will take the two photos and try to get the best size possible for them
 function syncImageSizes(logo, picFrame){
 	
-
 }
 
 // this function will revert And Merge the Photos 
