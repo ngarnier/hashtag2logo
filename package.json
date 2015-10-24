@@ -20,8 +20,8 @@
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
+    "gm": "^1.20.0",
     "pngjs": "^2.0.0",
-    "express": "^4.13.3",
     "twit": "^2.1.0"
   }
 }
