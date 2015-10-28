@@ -12,11 +12,11 @@ exports.createMosaic = function(imagesArray, callback) {
    	var mosaic = function() {
 	
 	// Vertically append each row of images to create the mosaic
-	gmstateRow = gm("0.png");
+	gmstateRow = gm('frames/0.png');
 	console.log("initalizing 0.png");
 
 	for (var i = 1; i < m; i++) {
-		gmstateRow.append(i+".png");
+		gmstateRow.append('frames/' + i+".png");
 		console.log("appending " + i+".png");
 	}
 
@@ -38,7 +38,7 @@ exports.createMosaic = function(imagesArray, callback) {
 		}
 		// finally write out the file asynchronously
 
-		gmstate.write(k +'.png', function (err) {
+		gmstate.write('frames/' + k +'.png', function (err) {
 			// create a counter
 			counter++;
 			console.log(' --- counter:' + counter);

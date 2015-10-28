@@ -32,7 +32,7 @@ exports.revertAndMerge = function(toRevert, toMerge, resultName) {
                     else{
                         //otheerwise put it transparent
                         base.data[idx] = up.data[idx];
-                        base.data[idx+1] = 32;
+                        base.data[idx+1] = up.data[idx + 2];
                         base.data[idx+2] = up.data[idx + 2];
                         base.data[idx+3] = up.data[idx + 3];
                     }
