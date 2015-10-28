@@ -1,5 +1,4 @@
-// This is the server
-
+// This is the server receiving 
 var express = require('express'),
 	bodyParser = require('body-parser'),
 	app = express(),
@@ -42,7 +41,6 @@ app.post('/parse/', function (req, res) {
 			else{
 				handleAttachment(new_attachement_name);
 			}
-
 		});
 	});
 
