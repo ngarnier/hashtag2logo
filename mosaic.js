@@ -48,7 +48,9 @@ exports.createMosaic = function(imagesArray, callback) {
 			}
 			else {
 				if (counter == m) {
+				console.log("Starting mosaic");
 				mosaic();
+				counter = 0;
 				}
 			}
 		});

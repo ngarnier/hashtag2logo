@@ -30,9 +30,9 @@ exports.revertAndMerge = function(toRevert, toMerge, resultName) {
                         base.data[idx+3] = 0;
                     }
                     else{
-                        //otheerwise put it transparent
+                        //otherwise make it transparent
                         base.data[idx] = up.data[idx];
-                        base.data[idx+1] = 32;
+                        base.data[idx+1] = up.data[idx + 1];
                         base.data[idx+2] = up.data[idx + 2];
                         base.data[idx+3] = up.data[idx + 3];
                     }
@@ -40,7 +40,7 @@ exports.revertAndMerge = function(toRevert, toMerge, resultName) {
             }
 
             base.pack().pipe(fs.createWriteStream(resultName));
-            console.log("Reverting & merging " + toRevert + "with" + toMerge);
+            console.log("Reverting & merging " + toRevert + " with " + toMerge);
         });
 
     });
