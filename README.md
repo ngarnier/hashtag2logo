@@ -1,8 +1,8 @@
-**Work in progress.**
-
 # hashtag2logo
 Backend: Turn all the active twitter users on a hashtag into the logo of your choice.
+**Note: this app is still incomplete**
 
+![blendwebmix_1446318368](https://cloud.githubusercontent.com/assets/4700883/10865441/bd38c8ec-800b-11e5-9294-1e94eb0456a7.png)
 
 ## What?
 
