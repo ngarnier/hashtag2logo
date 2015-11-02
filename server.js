@@ -15,7 +15,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.get('/', function (req, res) {
-  res.send('Hello World!');
+  res.send('Hello You!');
 });
 
 // this is where the Parse API should make a post reques
@@ -31,7 +31,7 @@ app.post('/parse/', function (req, res) {
 	var timestamp = Math.floor(new Date() / 1000),
 	new_attachement_name = hashtag + "_" + timestamp + ".png";
 
-	console.log("--> Mail recived from " + sender + "with the hashtag #" + hashtag);
+	console.log("--> Mail received from " + sender + " with the hashtag #" + hashtag);
 
 	handleHashtag(hashtag, function(){
 		require("fs").writeFile("attachment/" + new_attachement_name, attachmentb64, 'base64', function(err) {
@@ -56,8 +56,6 @@ function handleAttachment(att){
 	});
 
 	// I need to resize the photo in order to cut unused space
-
-	// Revert the transparent with white color and the non-transparent in transparent
 }
 
 
