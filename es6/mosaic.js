@@ -1,18 +1,13 @@
 
 import fs from 'fs';
 import gm from 'gm';
+import chunk from './chunk';
 
 const
     PIC_SIZE = 20
   , LINE_SIZE = 4
   , TILE_WIDTH = 50;
 
-let chunk = (array, size) => {
-    var R = [];
-    for (var i = 0; i < array.length; i += size)
-        R.push(array.slice(i, i + size));
-    return R;
-}
 
 export default function mosaic (array, callback = () => 0) {
   let image = gm();
