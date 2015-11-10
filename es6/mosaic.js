@@ -3,22 +3,18 @@ import fs from 'fs';
 import gm from 'gm';
 import chunk from './chunk';
 
-const
-    PIC_SIZE = 20
-  , LINE_SIZE = 4
-  , TILE_WIDTH = 50;
+export default function mosaic (array, width = 20, callback = () => 0) {
+  let image = gm()
+      , m = Math.floor(Math.sqrt(array.length))
+      , w = width / m;
 
-
-export default function mosaic (array, callback = () => 0) {
-  let image = gm();
-
-  let lines = chunk(array, LINE_SIZE)
+  let lines = chunk(array, m)
       .map(line =>
-        line.reduce((p, c) => p.resize(TILE_WIDTH).append(c, true), gm()))
+        line.reduce((p, c) => p.resize(w).append(c, true), gm()))
       .map((gmLine, index) => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           let file = `./tmp/${index}.png`;
-          gmLine.write(file, e => e ? reject(e) : resolve(file));
+          gmLine.write(file, e => e ? callback(e) : resolve(file));
         });
       });
 
@@ -26,7 +22,6 @@ export default function mosaic (array, callback = () => 0) {
     .then(files => {
       files
         .reduce((p, c) => p.append(c), gm())
-        .write('./output.png', callback);
+        .write('./output.png', () => callback(null, 'output.png'));
     })
-    .catch(callback);
 }

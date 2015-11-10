@@ -2,7 +2,7 @@
 import Twitter from 'twit';
 import {twitter as credentials} from './credentials';
 
-const TWITTER_PAGES = 3;
+const TWITTER_PAGES = 2;
 
 let flatten = v => v.constructor == Array ?
   Array.prototype.concat.apply([], v.map(flatten)) : [v]
@@ -18,8 +18,7 @@ function* getTwitterPages (q, number) {
       payload.cursor = cursor;
 
     yield new Promise((resolve, reject) => {
-      return resolve(['1', '2', '3', '4', '5']);
-      client.get('search/teets', payload, (err, data) => {
+      client.get('search/tweets', payload, (err, data) => {
         if (err)
           return reject(err);
         cursor = data.next_cursor;
@@ -31,10 +30,12 @@ function* getTwitterPages (q, number) {
 
 export default function getPics (hash) {
   return new Promise((resolve, reject) => {
+    // TODO: change that
     Promise.all([...getTwitterPages(hash, TWITTER_PAGES)])
-      .catch(reject)
-      .then(statuses => {
-          resolve(flatten(statuses).map(s => s.user.profile_image_url));
-      })));
+      .then(statuses =>
+          resolve(flatten(statuses)
+            .map(s => s.user.profile_image_url))
+            .filter(u => u.indexOf('.gif') === -1))
+      .catch(e => reject(e));
   });
 }
