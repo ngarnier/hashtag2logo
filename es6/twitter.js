@@ -2,7 +2,7 @@
 import Twitter from 'twit';
 import {twitter as credentials} from './credentials';
 
-const TWITTER_PAGES = 2;
+const TWITTER_PAGES = 3;
 
 let flatten = v => v.constructor == Array ?
   Array.prototype.concat.apply([], v.map(flatten)) : [v]
@@ -30,7 +30,6 @@ function* getTwitterPages (q, number) {
 
 export default function getPics (hash) {
   return new Promise((resolve, reject) => {
-    // TODO: change that
     Promise.all([...getTwitterPages(hash, TWITTER_PAGES)])
       .then(statuses =>
           resolve(flatten(statuses)
