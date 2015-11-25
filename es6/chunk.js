@@ -1,3 +1,8 @@
+/*
+  chunk takes an array & an integer (size) and returns an array of arrays
+  composed of size elements
+
+*/
 
 let chunk = (array, size) => {
     var R = [];

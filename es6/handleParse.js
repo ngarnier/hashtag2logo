@@ -7,7 +7,7 @@ import partial from './partial';
 import merge from '../reverterMerger';
 import sendEmail from './sendEmail';
 
-const SIZE = 1000;
+const SIZE = 600;
 const _ = undefined;
 
 export default function handleParse (req, res) {
@@ -21,13 +21,13 @@ export default function handleParse (req, res) {
     .then(partial(mosaic, _, SIZE, (e, file) => {
       if (e) throw e;
 
-      let filename = `${Math.floor(new Date() / 1000)}.png`
+      const filename = `${Math.floor(new Date() / 1000)}.png`
           , attachmentName = `./attachments/${filename}`
-          , outputName = `./outputs/${filename}`
-          , send = partial(sendEmail, hashtag, sender, outputName)
+          , finalName = `./finals/${filename}`;
+          //, send = partial(sendEmail, hashtag, sender, outputName)
 
       fs.writeFile(attachmentName, attachment, 'base64', (err) => {
-        merge(attachmentName, file, outputName, send);
+        merge(attachmentName, file, finalName, (attachment) => sendEmail(hashtag, sender, finalName));
       });
 
     }))
@@ -36,8 +36,8 @@ export default function handleParse (req, res) {
 
 handleParse({
   body: {
-    Subject: 'mailjet',
-    Sender: '',
-    Attachment1: '',
+    Subject: 'google',
+    Sender: 'ngarnier@mailjet.com',
+    Attachment1: fs.readFileSync('blend1.png').toString('base64'),
   }
 });

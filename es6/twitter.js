@@ -4,8 +4,8 @@ import {twitter as credentials} from './credentials';
 
 const TWITTER_PAGES = 3;
 
-let flatten = v => v.constructor == Array ?
-  Array.prototype.concat.apply([], v.map(flatten)) : [v]
+const flatten = v => v.constructor == Array ?
+  Array.prototype.concat.apply([], v.map(flatten)) : [v];
 
 let client = new Twitter(credentials);
 
