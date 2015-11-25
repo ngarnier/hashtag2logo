@@ -15,4 +15,4 @@ export default function sendEmail (hashtag, sender, attachment) {
   email['Recipients'] = [{Email: sender}];
 
   client.get('send').request(email, (err, response, body) => console.log(err || body));
-}
+}  
