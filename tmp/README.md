@@ -1,0 +1,1 @@
+This is the temp folder, it contains all the chunks of the twitter profiles, mostly used to debug
