@@ -28,15 +28,7 @@ export default function handleParse (req, res) {
       fs.writeFile(attachmentName, attachment, 'base64', (err) => {
         merge(attachmentName, file, finalName, (attachment) => sendEmail(hashtag, sender, finalName));
       });
-
+     res.send('ok');
     }))
     .catch(e => console.log(e));
 }
-
-handleParse({
-  body: {
-    Subject: 'blackfriday',
-    Sender: 'gbadi@mailjet.com',
-    Attachment1: fs.readFileSync('./images/final.png').toString('base64'),
-  }
-});
