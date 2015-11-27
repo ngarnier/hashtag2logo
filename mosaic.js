@@ -1,60 +1,41 @@
-var gm = require('gm'),
-	gmstate,
-	gmstateRow,
-	m,
-	counter = 0;
 
-// this will handle the mosaic
-exports.createMosaic = function(imagesArray, callback) {
+import fs from 'fs';
+import gm from 'gm';
+import chunk from './chunk';
 
-   m = Math.floor(Math.sqrt(imagesArray.length));
+/*
+  Takes the array of images by default, sets the width to 500 by default and
+  callback empty
+*/
+export default function mosaic (array, width = 500, callback = () => 0) {
+  /*
+    Sets an gm instance.
+    m is the number of images on 1 side of the mosaic to make sure we have a
+    square
+  */
+  const output = `output_${new Date()/1000}.png`;
+  let image = gm()
+      , m = Math.floor(Math.sqrt(array.length));
 
-   	var mosaic = function() {
-	
-	// Vertically append each row of images to create the mosaic
-	gmstateRow = gm("0.png");
-	console.log("initalizing 0.png");
-
-	for (var i = 1; i < m; i++) {
-		gmstateRow.append(i+".png");
-		console.log("appending " + i+".png");
-	}
-
-	// finally write out the file asynchronously
-	gmstateRow.write('picFrame.png', function (err) {
-		if (err) {
-			console.log(err);
-		}
-	});	
+  let lines = chunk(array, m)
+      /*
+        Create each line with the m images. true in gm.append
+        appends the images horizontally
+      */
+      .map(line =>
+        line.reduce((p, c) => p.append(c, true), gm()))
+      .map((gmLine, index) => {
+        return new Promise((resolve) => {
+          let file = `./tmp/${index}_${output}`;
+          gmLine.write(file, e => e ? callback(e) : resolve(file));
+        });
+      });
+  console.log(width, '--', m);
+  Promise.all(lines)
+    .then(files => {
+      files
+        .reduce((p, c) => p.append(c), gm())
+        .resize(width)
+        .write('./'+output, () => callback(null, output));
+    })
 }
-
-	// Create each row of twitter profile pics that will compose the mosaic
-	for (var k = 0; k < m; k++) {
-		gmstate = gm(imagesArray[0+k*m]); // Initialize each row with a first image
-		console.log("creating the " + k + "th row");
-
-		for (var i = 1+k*m; i < m+k*m; i++) {
-			gmstate.append(imagesArray[i], true); // horizontally add the following images to create the row
-		}
-		// finally write out the file asynchronously
-
-		gmstate.write(k +'.png', function (err) {
-			// create a counter
-			counter++;
-			console.log(' --- counter:' + counter);
-
-			if (err) {
-				console.log(err);
-			}
-			else {
-				if (counter == m) {
-				console.log("Starting mosaic");
-				mosaic();
-				counter = 0;
-				}
-			}
-		});
-
-	}
-	callback();
-};

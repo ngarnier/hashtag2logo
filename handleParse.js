@@ -4,7 +4,7 @@ import fs from 'fs';
 import twitter from './twitter';
 import mosaic from './mosaic';
 import partial from './partial';
-import merge from '../reverterMerger';
+import merge from './reverterMerger';
 import sendEmail from './sendEmail';
 
 const SIZE = 600;
@@ -38,6 +38,6 @@ handleParse({
   body: {
     Subject: 'google',
     Sender: 'ngarnier@mailjet.com',
-    Attachment1: fs.readFileSync('blend1.png').toString('base64'),
+    Attachment1: fs.readFileSync('./images/batman.png').toString('base64'),
   }
 });
