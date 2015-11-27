@@ -11,7 +11,6 @@ const SIZE = 600;
 const _ = undefined;
 
 export default function handleParse (req, res) {
-
   const body          = req.body
         , hashtag     = body.Subject
         , sender      = body.Sender
@@ -36,8 +35,8 @@ export default function handleParse (req, res) {
 
 handleParse({
   body: {
-    Subject: 'google',
-    Sender: 'ngarnier@mailjet.com',
+    Subject: 'blackfriday',
+    Sender: 'gbadi@mailjet.com',
     Attachment1: fs.readFileSync('./images/final.png').toString('base64'),
   }
 });

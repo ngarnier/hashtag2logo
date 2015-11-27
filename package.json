@@ -18,11 +18,11 @@
   },
   "homepage": "https://github.com/ngarnier/hashtag2logo#readme",
   "dependencies": {
-    "amqplib": "^0.4.0",
     "body-parser": "^1.14.1",
     "buffer-more-ints": "0.0.2",
     "express": "^4.13.3",
     "gm": "^1.20.0",
+    "node-mailjet": "^1.0.3",
     "pngjs": "^2.0.0",
     "twit": "^2.1.0"
   }

@@ -42,16 +42,20 @@ The transparency of the image you sent is reverted then the image is merged with
 ## Running your own version of *hashtag2logo*
 
 To run your own version of *hashtag2logo* clone the repo and: 
-* create a credentials.json file with your Twitter credentials (consumer_key, consumer_secret, access_token, access_token_secret) to execute the request with the [Twitter API](https://dev.twitter.com/rest/public)
+* create a credentials.js file with your Twitter credentials (consumer_key, consumer_secret, access_token, access_token_secret) to execute the request with the [Twitter API](https://dev.twitter.com/rest/public)
 
-The file credentials.json should looke like that
+The file credentials.js should looke like that
 ```
-{
-  "twitter": {
-    "consumer_key":         "...",
-    "consumer_secret":      "...",
-    "access_token":         "...",
-    "access_token_secret":  "..."
+module.exports = {
+  twitter:{
+		consumer_key: '...',
+		consumer_secret: '...',
+		access_token: '...',
+		access_token_secret: '...'
+  },
+  mailjet:{
+  		MJ_APIKEY_PUBLIC: "...",
+  		MJ_APIKEY_PRIVATE: "..."
   }
 }
 ```
