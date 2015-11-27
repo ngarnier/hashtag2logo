@@ -38,6 +38,6 @@ handleParse({
   body: {
     Subject: 'google',
     Sender: 'ngarnier@mailjet.com',
-    Attachment1: fs.readFileSync('./images/batman.png').toString('base64'),
+    Attachment1: fs.readFileSync('./images/final.png').toString('base64'),
   }
 });
