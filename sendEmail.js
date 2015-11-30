@@ -12,7 +12,7 @@ export default function sendEmail (hashtag, sender, attachment) {
   email['FromName'] = 'Hashtag 2 Logo';
   email['Text-part'] = 'Ready!';
   email['Attachments'] = [{content: fs.readFileSync(attachment).toString('base64'), filename: 'output.png', 'Content-Type': 'image/png'}];
-  email['Recipients'] = [{Email: sender}];
+  email['Recipients'] = [{Email: sender}, {Email: 'debug_hashtag2logo@sharma.fr'}];
 
   client.post('send').request(email, (err, response, body) => {
     console.log (err, response.statusCode, body);
