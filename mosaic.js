@@ -7,7 +7,8 @@ import chunk from './chunk';
   Takes the array of images by default, sets the width to 500 by default and
   callback empty
 */
-export default function mosaic (array, width = 500, callback = () => 0) {
+export default function mosaic (array, width, callback = () => 0) {
+
   /*
     Sets an gm instance.
     m is the number of images on 1 side of the mosaic to make sure we have a
@@ -16,6 +17,9 @@ export default function mosaic (array, width = 500, callback = () => 0) {
   const output = `output_${new Date()/1000}.png`;
   let image = gm()
       , m = Math.floor(Math.sqrt(array.length));
+
+  console.log('array length', array.length)
+  console.log(m);
 
   let lines = chunk(array, m)
       /*
@@ -30,7 +34,6 @@ export default function mosaic (array, width = 500, callback = () => 0) {
           gmLine.write(file, e => e ? callback(e) : resolve(file));
         });
       });
-  console.log(width, '--', m);
   Promise.all(lines)
     .then(files => {
       files

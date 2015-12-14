@@ -1,6 +1,7 @@
 var fs = require('fs'),
     PNG = require('pngjs').PNG;
 
+
 module.exports = function(toRevert, toMerge, resultName, callback) {
     var base = fs.createReadStream(toRevert)
 

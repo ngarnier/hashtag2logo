@@ -6,9 +6,7 @@ import mosaic from './mosaic';
 import partial from './partial';
 import merge from './reverterMerger';
 import sendEmail from './sendEmail';
-
-const SIZE = 600;
-const _ = undefined;
+import sizeOf from 'image-size';
 
 export default function handleParse (req, res) {
   const body          = req.body
@@ -17,18 +15,50 @@ export default function handleParse (req, res) {
         , attachment  = body.Attachment1;
 
   twitter(hashtag)
-    .then(partial(mosaic, _, SIZE, (e, file) => {
+	.then(array => {
+
+      const filename = `${Math.floor(new Date() / 1000)}.png`
+          , attachmentName = `./attachments/${filename}`
+          , finalName = `./finals/${filename}`;
+
+      fs.writeFile(attachmentName, attachment, 'base64', (err) => {
+
+		if (err) throw new Error('Write error ' + e.message);
+
+		const size = sizeOf(attachmentName);
+
+		mosaic(array, size.width, (e, file) => {
+			if (e) throw e;
+			merge(attachmentName, file, finalName, (attachment) => sendEmail(hashtag, sender, finalName));
+		});
+
+      });
+	})
+  /*
+    .then(partial(mosaic, null, SIZE, (e, file) => {
       if (e) throw e;
 
       const filename = `${Math.floor(new Date() / 1000)}.png`
           , attachmentName = `./attachments/${filename}`
           , finalName = `./finals/${filename}`;
-          //, send = partial(sendEmail, hashtag, sender, outputName)
 
       fs.writeFile(attachmentName, attachment, 'base64', (err) => {
         merge(attachmentName, file, finalName, (attachment) => sendEmail(hashtag, sender, finalName));
       });
      res.send('ok');
     }))
+	*/
     .catch(e => console.log(e));
 }
+
+handleParse({
+	body: {
+		Sender: 'gbadi@student.42.fr',
+		Subject: 'apidays',
+		Attachment1: fs.readFileSync('/Users/guillaume/Downloads/blend1.png').toString('base64'),
+	}	
+}, {
+	send() {
+		console.log('ok')
+	}
+});
